@@ -1,8 +1,8 @@
 FLOW_VERSION ?= $(shell node -p 'require("./package.json").version')
 FLOW_BINS = \
-	flow-linux64-v$(FLOW_VERSION)/flow \
 	flow-osx-v$(FLOW_VERSION)/flow \
-	flow-win64-v$(FLOW_VERSION)/flow.exe
+	# flow-linux64-v$(FLOW_VERSION)/flow \
+	# flow-win64-v$(FLOW_VERSION)/flow.exe
 
 .PHONY: all
 all: clean build test
@@ -23,17 +23,17 @@ SHASUM256.txt: $(FLOW_BINS)
 	shasum -a 256 $^ > $@
 
 get-flow = \
-	curl -O -L https://github.com/facebook/flow/releases/download/v$(*F)/$(@D).zip; \
-	unzip $(@D).zip flow/$(@F); \
-	mv flow $(@D); \
+	curl -O -L https://github.com/JonathanUsername/flow/releases/download/v$(*F)/$(@D).zip; \
+	unzip $(@D).zip flow -d $(@D); \
+	mv flow $(@D)/flow; \
 	rm $(@D).zip; \
 	touch $@
 
-flow-linux64-v%/flow:
-	$(get-flow)
+# flow-linux64-v%/flow:
+# 	$(get-flow)
 
 flow-osx-v%/flow:
 	$(get-flow)
 
-flow-win64-v%/flow.exe:
-	$(get-flow)
+# flow-win64-v%/flow.exe:
+# 	$(get-flow)

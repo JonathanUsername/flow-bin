@@ -1,0 +1,56 @@
+From 37300b34c92ab7b5312e2e8d7cfbba15784a0f5b Mon Sep 17 00:00:00 2001
+From: Jonathan King <jonathan.j.king@gmail.com>
+Date: Tue, 22 Aug 2017 12:55:49 +0100
+Subject: [PATCH] Get simple whitelist from env var
+
+---
+ src/common/errors/error_suppressions.ml | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/src/common/errors/error_suppressions.ml b/src/common/errors/error_suppressions.ml
+index 68f137b..e5af37f 100644
+--- a/src/common/errors/error_suppressions.ml
++++ b/src/common/errors/error_suppressions.ml
+@@ -15,6 +15,7 @@
+ open Severity
+ open Span
+ open Utils_js
++open Sys
+ 
+ type error_suppressions = Loc.LocSet.t SpanMap.t
+ type t = {
+@@ -85,6 +86,14 @@ let check_locs (locs: Loc.t list) suppressions lint_kind severity_cover =
+       lint_kind, severity_cover) locs
+   in (suppression_state, consumed, suppressions)
+ 
++let whitelist_env = try getenv "FLOW_WHITELIST" with Not_found -> "";;
++let whitelist_re_list = if whitelist_env = "" then [] else Str.split (Str.regexp "++") whitelist_env;;
++let matches_whitelist_elem s1 s2 =
++    let re = Str.regexp s2
++    in
++        try ignore (Str.search_forward re s1 0); true
++        with Not_found -> false;;
++
+ let check err severity_cover suppressions =
+   let locs = Errors.locs_of_error err in
+   let lint_kind =
+@@ -103,7 +112,15 @@ let check err severity_cover suppressions =
+         String_utils.is_substring "/node_modules/" (Loc.string_of_filename filename))
+     | [] -> false
+   in
+-  let result = if is_in_dependency && (Option.is_some lint_kind)
++  let is_lint_warning = is_in_dependency && (Option.is_some lint_kind) in
++  let is_whitelisted = match Errors.infos_of_error err with
++    | (primary_loc,_)::_ ->
++      Option.value_map (Loc.source primary_loc) ~default:false ~f:(fun filename ->
++        List.exists (fun e ->  matches_whitelist_elem (Loc.string_of_filename filename) e) whitelist_re_list
++      )
++    | [] -> false
++  in
++  let result = if is_lint_warning || is_whitelisted
+     then Off
+     else result
+   in (result, consumed, { suppressions; unused; unused_lint_suppressions; })
+-- 
+2.10.1 (Apple Git-78)
+
