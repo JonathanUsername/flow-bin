@@ -8,12 +8,17 @@ Change the version of package.json to match the version of the fork of flow you 
 ./build.sh $VERSION_OR_BRANCH
 ```
 
-This should clone the fork of flow, run the patch against it and then compile it ready to be included in the repo.
+This should clone the fork of flow, run the patch against it and then compile it ready to be included in the repo for mac and linux (under dist/).
 
-** THIS REQUIRES MANUALLY COMPILING OCAML ON YOUR MACHINE **
+** THIS REQUIRES MANUALLY COMPILING OCAML ON YOUR MAC AND IN DOCKER **
 
 Please follow instructions on http://github.com/facebook/flow for how to prepare yourself for compilation from source.
 
+Then run:
+
+```
+npm publish --access=public
+```
 
 
 > Binary wrapper for [Flow](http://flowtype.org) - A static type checker for JavaScript
