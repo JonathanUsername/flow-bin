@@ -1,5 +1,21 @@
 # flow-bin [![Build Status](https://travis-ci.org/flowtype/flow-bin.svg?branch=master)](https://travis-ci.org/flowtype/flow-bin)
 
+## How to run this fork
+
+Change the version of package.json to match the version of the fork of flow you want to download. There must be a release for that version of the fork of flow (JonathanUsername/flow).
+
+```
+./build.sh $VERSION_OR_BRANCH
+```
+
+This should clone the fork of flow, run the patch against it and then compile it ready to be included in the repo.
+
+** THIS REQUIRES MANUALLY COMPILING OCAML ON YOUR MACHINE **
+
+Please follow instructions on http://github.com/facebook/flow for how to prepare yourself for compilation from source.
+
+
+
 > Binary wrapper for [Flow](http://flowtype.org) - A static type checker for JavaScript
 
 OS X, Linux (64-bit) and Windows binaries are currently [provided](http://flowtype.org/docs/getting-started.html#_).
