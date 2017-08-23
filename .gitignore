@@ -2,4 +2,3 @@ node_modules
 /flow-*-v*/
 *.swp
 flow-src/
-dist/
