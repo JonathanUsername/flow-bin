@@ -1,20 +1,15 @@
 #!/bin/bash
 set -e
 
-if [ "$#" -eq 0 ]; then
-    VERSION=$(node -p 'require("./package.json").version');
-    echo 'Taking version/branch $VERSION from package.json since one was not supplied. Please ensure it is an extant branch. Usage: ./build.sh "v0.53.1";';
-else
-    BRANCH=$1;
-    EXTRA="$2";
-    VERSION="$BRANCH-$EXTRA"
-fi
+echo 'Usage: ./build.sh 0.57.3 1         That will create v0.57.3-1. The last arg is optional.'
+
+BRANCH="v$1";
+[[ -n "$2" ]] && EXTRA="-$2" || EXTRA="";
+VERSION="$1$EXTRA"
 
 echo "Branch in jonathanusername/flow is: $BRANCH"
 echo "Extra suffix to eventual version is: $EXTRA"
 echo "Full version to include in package.json will be: $VERSION"
-
-exit 0
 
 if [ ! -d 'flow-src/' ]; then
     git clone git@github.com:JonathanUsername/flow.git flow-src;
@@ -37,7 +32,8 @@ docker run -it  -v `pwd`/dist/linux:/home/opam/flow/bin -e "FLOW_VERSION=$BRANCH
 
 
 rewrite_package_version() {
-  cat package.json | jq "to_entries | map(if .key == "version" then . + {\"value\": \"$VERSION\"} else . end) | from_entries" > package.json
+  NEWPACK=$(cat package.json | jq "to_entries | map(if .key == \"version\" then . + {\"value\": \"$VERSION\"} else . end) | from_entries")
+  echo "$NEWPACK"
 }
 
-rewrite_package_version && 'Build complete. Please run `npm publish --access=public` if ready to roll.'
+rewrite_package_version && echo 'Build complete. Please run `npm publish --access=public` if ready to roll.' || echo 'Errors ahoy!';
