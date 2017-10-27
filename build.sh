@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 if [ "$#" -ne 1 ]; then
     VERSION=$(node -p 'require("./package.json").version');
     echo 'Taking version/branch $VERSION from package.json since one was not supplied. Please ensure it is an extant branch. Usage: ./build.sh "v0.53.1";';
@@ -12,7 +14,7 @@ fi;
 
 pushd flow-src;
 
-git checkout "$VERSION" && git am -3 < ../changes.patch && make
+git fetch && git checkout "$VERSION" && make || exit 1 #  && git am -3 < ../changes.patch && make || exit 1
 
 popd;
 

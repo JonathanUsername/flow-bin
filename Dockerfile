@@ -9,4 +9,4 @@ RUN git clone https://github.com/JonathanUsername/flow.git
 
 COPY linux-build.sh linux-build.sh
 ADD changes.patch changes.patch
-
+RUN cd flow && git fetch
