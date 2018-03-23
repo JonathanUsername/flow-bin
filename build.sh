@@ -26,9 +26,10 @@ popd;
 mv flow-src/bin/flow dist/mac/flow
 echo 'Mac binaries installed'
 
-docker build -t flow-bin .
-docker run -it  -v `pwd`/dist/linux:/home/opam/flow/bin -e "FLOW_VERSION=$BRANCH" flow-bin:latest '/home/opam/linux-build.sh' \
-    && echo 'Linux binaries installed'
+echo 'Building linux binaries in docker. If this fails, try building with --no-cache and re-running'
+docker build --no-cache -t flow-bin .
+docker run -it  -v `pwd`/dist/linux:/home/opam/flow/bin -e "FLOW_VERSION=$BRANCH" flow-bin:latest '/home/opam/linux-build.sh'
+echo 'Linux binaries installed' 
 
 
 rewrite_package_version() {
