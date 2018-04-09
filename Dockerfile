@@ -1,12 +1,20 @@
 FROM ocaml/opam:ubuntu
 
-RUN opam init --comp 4.03.0 \
-	&& opam update \
-	&& opam install -y ocamlfind sedlex \
-    && eval `opam config env`;
+RUN opam update \
+    && opam init --comp 4.03.0 
 
-RUN git clone https://github.com/JonathanUsername/flow.git
+RUN opam switch 4.03.0 \
+	&& eval "$(opam config env)" 
 
 COPY linux-build.sh linux-build.sh
-ADD changes.patch changes.patch
-RUN cd flow && git fetch
+
+RUN git clone https://github.com/flowtype/ocaml-wtf8.git \
+	&& cd ocaml-wtf8 \
+	&& opam pin add wtf8 . \
+	&& cd .. \
+	&& git clone https://github.com/JonathanUsername/flow.git \
+	&& cd flow \
+	&& git checkout "${FLOW_VERSION}" \
+	&& opam pin add flowtype . -n \
+	&& opam install --deps-only flowtype
+
