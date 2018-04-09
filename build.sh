@@ -11,11 +11,14 @@ echo "Branch in jonathanusername/flow is: $BRANCH"
 echo "Extra suffix to eventual version is: $EXTRA"
 echo "Full version to include in package.json will be: $VERSION"
 
-if [ ! -d 'flow-src/' ]; then
-    git clone git@github.com:JonathanUsername/flow.git flow-src;
+SRC_DIR='flow-src'
+if [ -d $SRC_DIR ]; then
+    rm -rf $SRC_DIR
 fi;
 
-pushd flow-src;
+git clone git@github.com:JonathanUsername/flow.git $SRC_DIR;
+
+pushd $SRC_DIR;
 
 # I'm giving up on old way of applying patches, easier to adjust in jonathanusername/flow, make a new branch with the right version and then just pull the new version here, but for posterity, I used to do it like this:  && git am -3 < ../changes.patch && make || exit 1
 
