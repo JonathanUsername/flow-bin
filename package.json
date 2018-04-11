@@ -1,6 +1,6 @@
 {
   "name": "@jonathanusername/flow-bin",
-  "version": "0.69.0-jk",
+  "version": "0.69.0-jk-2",
   "description": "Binary wrapper for Flow - A static type checker for JavaScript",
   "license": "BSD-3-Clause",
   "repository": "JonathanUsername/flow-bin",
