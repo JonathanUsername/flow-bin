@@ -31,7 +31,7 @@ echo 'Mac binaries installed'
 
 echo 'Building linux binaries in docker. If this fails, try building with --no-cache and re-running'
 docker build --no-cache -t flow-bin .
-docker run -it  -v `pwd`/dist/linux:/home/opam/flow/bin -e "FLOW_VERSION=$BRANCH" flow-bin:latest '/home/opam/linux-build.sh'
+docker run -it  -v `pwd`/dist/linux:/root/flow/bin -e "FLOW_VERSION=$BRANCH" flow-bin:latest '/root/linux-build.sh'
 echo 'Linux binaries installed' 
 
 
