@@ -17,16 +17,10 @@ WORKDIR /root
 
 # wtf8 is needed, so we compile and add that
 RUN git clone https://github.com/flowtype/ocaml-wtf8.git \
-	&& cd ocaml-wtf8 \
-	&& opam pin add wtf8 .
+	&& opam pin add wtf8 ocaml-wtf8
+
+RUN git clone https://github.com/JonathanUsername/flow.git
 
 COPY linux-build.sh linux-build.sh
 
-# Grab my actual source finally and compile that. Should be last step because it'll change the most, hopefully
-RUN git clone https://github.com/JonathanUsername/flow.git \
-	&& cd flow \
-	&& git checkout "${FLOW_VERSION}" \
-	&& opam pin add flowtype . -n \
-	&& opam install --deps-only flowtype
-
-
+ENTRYPOINT /root/linux-build.sh
