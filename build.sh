@@ -42,7 +42,8 @@ fi
 
 rewrite_package_version() {
   NEWPACK=$(cat package.json | jq "to_entries | map(if .key == \"version\" then . + {\"value\": \"$VERSION\"} else . end) | from_entries")
-  echo "$NEWPACK"
+  echo "$NEWPACK" > package.json
 }
 
+echo 'Rewriting package.json with new version...'
 rewrite_package_version && echo 'Build complete. Please run `npm publish --access=public` if ready to roll.' || echo 'Errors ahoy!';
